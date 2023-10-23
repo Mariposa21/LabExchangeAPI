@@ -1,3 +1,4 @@
+using LabExchangeAPI.BusinessModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LabExchangeAPI.Controllers
@@ -19,27 +20,58 @@ namespace LabExchangeAPI.Controllers
         }
 
         [HttpGet(Name = "GetVendors")]
-        public IEnumerable<string> GetVendors()
+        public IEnumerable<Vendor> GetVendors()
         {
-            return Array.Empty<string>();
+            List<Vendor> VendorArray = new List<Vendor>();
+            Vendor vendorMock1 = new Vendor()
+            {
+                VendorId = 1, 
+                VendorName = "DiagnosticsLab", 
+                VendorStreetAddress1 = "123 Blueberry Lane", 
+                VendorStreetAddress2 = null, 
+                VendorCity = "Boston", 
+                VendorState = "MA", 
+                VendorZipCode = "00000", 
+                VendorPhone = "888-888-8888", 
+                VendorExtension = null
+            };
+            Vendor vendorMock2 = new Vendor()
+            {
+                VendorId = 1,
+                VendorName = "BloodLabsNewEngland",
+                VendorStreetAddress1 = "123 Strawberry Circle",
+                VendorStreetAddress2 = null,
+                VendorCity = "Boston",
+                VendorState = "MA",
+                VendorZipCode = "00000",
+                VendorPhone = "888-888-8888",
+                VendorExtension = "1234"
+            };
+            VendorArray.Add(vendorMock1);
+            VendorArray.Add(vendorMock2);
+            return VendorArray;
         }
 
         [HttpPost(Name = "PostVendor")]
-        public IEnumerable<string> PostVendors()
+        public async Task<IActionResult> PostVendors([FromBody] List<Vendor> vendors)
         {
-            return Array.Empty<string>();
+            return Ok(); 
         }
 
         [HttpPut(Name = "PutVendor")]
-        public IEnumerable<string> PutVendor()
+        public async Task<IActionResult> PutVendor([FromBody] Vendor vendor)
         {
-            return Array.Empty<string>();
+            return Ok(); 
         }
 
         [HttpDelete(Name = "DeleteVendor")]
-        public IEnumerable<string> DeleteVendors()
+        public async Task<IActionResult> DeleteVendors([FromBody] string[] vendorIds)
         {
-            return Array.Empty<string>();
+            foreach (string VendorId in vendorIds)
+            {
+                Console.WriteLine("Deleting " + VendorId.ToString());
+            }
+            return NoContent();
         }
     }
 }
