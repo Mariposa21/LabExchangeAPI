@@ -1,8 +1,8 @@
-namespace LabExchangeAPI.BusinessModels
+namespace LabExchangeAPI.LogicLayer.Models
 {
     public class TestResult
     {
-        public int Id { get; set; } = 0; 
+        public int Id { get; set; } = 0;
         public string VendorResultId { get; set; }
         public DateTime SubmissionDateTime { get; set; }
         public DateTime ResultGenerationDateTime { get; set; }

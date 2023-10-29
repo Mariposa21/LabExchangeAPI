@@ -1,4 +1,4 @@
-namespace LabExchangeAPI.BusinessModels
+namespace LabExchangeAPI.LogicLayer.Models
 {
     public class Vendor
     {

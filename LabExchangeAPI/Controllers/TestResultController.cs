@@ -1,5 +1,6 @@
-using LabExchangeAPI.BusinessModels;
+using LabExchangeAPI.LogicLayer.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace LabExchangeAPI.Controllers
 {

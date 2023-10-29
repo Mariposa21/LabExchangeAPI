@@ -1,4 +1,6 @@
-namespace LabExchangeAPI.BusinessModels
+using LabExchangeAPI.LogicLayer.Models;
+
+namespace LabExchangeAPI.LogicLayer.Models
 {
     public class TestType
     {

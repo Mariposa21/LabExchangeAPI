@@ -1,4 +1,4 @@
-using LabExchangeAPI.BusinessModels;
+using LabExchangeAPI.LogicLayer.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LabExchangeAPI.Controllers

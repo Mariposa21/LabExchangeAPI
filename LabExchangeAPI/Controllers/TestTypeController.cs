@@ -1,4 +1,5 @@
-using LabExchangeAPI.BusinessModels;
+using LabExchangeAPI.LogicLayer;
+using LabExchangeAPI.LogicLayer.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
