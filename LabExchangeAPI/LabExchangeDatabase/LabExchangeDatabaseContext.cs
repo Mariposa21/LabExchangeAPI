@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using LabExchangeAPI.Controllers;
 using Microsoft.EntityFrameworkCore;
 
 namespace LabExchangeAPI.LabExchangeDatabase;

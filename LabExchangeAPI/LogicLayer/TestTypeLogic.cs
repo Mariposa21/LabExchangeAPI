@@ -7,19 +7,18 @@ namespace LabExchangeAPI.LogicLayer
 {
     public class TestTypeLogic
     {
+        private LabExchangeDatabaseContext _context;
 
-        private readonly ILogger<TestTypeLogic> _logger;
-
-        public TestTypeLogic(ILogger<TestTypeLogic> logger)
+        public TestTypeLogic(LabExchangeDatabaseContext dbContext)
         {
-            _logger = logger;
+            _context = dbContext;
         }
-        public async Task<List<TestType>> GetTestTypes()
+        public async Task<List<TestType>> GetTestTypesAsync()
         {
             List<TestType> testTypes = new List<TestType>();
-            using (LabExchangeDatabaseContext dbContext = new LabExchangeDatabaseContext())
-            {
-                var dbTestTypes = await dbContext.TblTestTypes.ToListAsync();
+            //using (LabExchangeDatabaseContext dbContext = new LabExchangeDatabaseContext())
+            //{
+                var dbTestTypes = await _context.TblTestTypes.ToListAsync();
 
                 if (dbTestTypes.Count > 0)
                 {
@@ -39,7 +38,7 @@ namespace LabExchangeAPI.LogicLayer
                     return testTypes;
                 }
                     return Array.Empty<TestType>().ToList();
-            }
+           // }
         }
     }
 }

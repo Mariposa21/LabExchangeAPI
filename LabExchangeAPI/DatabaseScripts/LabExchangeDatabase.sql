@@ -73,3 +73,9 @@ VALUES (1, 'Urine'),
 (7, 'XRay')
 
 SET IDENTITY_INSERT dbo.tblTestTypeCategory OFF
+
+INSERT INTO dbo.tblTestType (TestTypeName, TestTypeCategoryId, TestTypeNormalValues, IsAbnormalValuesCritical, 
+	IsValidTestType, ApiUserId) 
+VALUES ('A1C', 2, '< 5.7%', 0, 1, 1), 
+	('Head Scan', 5, 'Radiologist review required.', 1, 1, 1), 
+	('Strep throat', 4, 'Negative', 1, 1, 1)

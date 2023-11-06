@@ -1,3 +1,4 @@
+using LabExchangeAPI.LabExchangeDatabase;
 using LabExchangeAPI.LogicLayer;
 using LabExchangeAPI.LogicLayer.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,12 @@ namespace LabExchangeAPI.Controllers
     {
 
         private readonly ILogger<TestTypeController> _logger;
+        private LabExchangeDatabaseContext _context;
 
-        public TestTypeController(ILogger<TestTypeController> logger)
+        public TestTypeController(ILogger<TestTypeController> logger, LabExchangeDatabaseContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
 
@@ -25,30 +28,32 @@ namespace LabExchangeAPI.Controllers
         }
 
         [HttpGet("~/TestTypes")]
-        public IEnumerable<TestType> GetTestTypes()
+        public async Task<List<TestType>> GetTestTypes()
         {
             List<TestType> TestTypeArray = new List<TestType>();
-            TestType testTypeMock1 = new TestType()
-            {
-                TestTypeId = 1, 
-                AbnormalValuesCritical = true,
-                TestTypeName = "Pregnancy",
-                IsValidTestType = true,
-                TestTypeCategory = TestTypeCategory.Urine, 
-                TestTypeNormalValues = "Negative"
-            };
-            TestType testTypeMock2 = new TestType()
-            {
-                TestTypeId = 2,
-                AbnormalValuesCritical = false,
-                TestTypeName = "Strep",
-                IsValidTestType = true,
-                TestTypeCategory = TestTypeCategory.Swab,
-                TestTypeNormalValues = "Negative"
-            };
+            //TestType testTypeMock1 = new TestType()
+            //{
+            //    TestTypeId = 1, 
+            //    AbnormalValuesCritical = true,
+            //    TestTypeName = "Pregnancy",
+            //    IsValidTestType = true,
+            //    TestTypeCategory = TestTypeCategory.Urine, 
+            //    TestTypeNormalValues = "Negative"
+            //};
+            //TestType testTypeMock2 = new TestType()
+            //{
+            //    TestTypeId = 2,
+            //    AbnormalValuesCritical = false,
+            //    TestTypeName = "Strep",
+            //    IsValidTestType = true,
+            //    TestTypeCategory = TestTypeCategory.Swab,
+            //    TestTypeNormalValues = "Negative"
+            //};
 
-            TestTypeArray.Add(testTypeMock1);
-            TestTypeArray.Add(@testTypeMock2);
+            //TestTypeArray.Add(testTypeMock1);
+            //TestTypeArray.Add(@testTypeMock2);
+            TestTypeLogic testTypeLogic = new TestTypeLogic(_context); 
+            TestTypeArray = await testTypeLogic.GetTestTypesAsync(); 
             return TestTypeArray; 
         }
 
