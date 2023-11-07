@@ -58,12 +58,6 @@ namespace LabExchangeAPI.Controllers
             return Ok(); 
         }
 
-        [HttpPut(Name = "PutVendor")]
-        public async Task<IActionResult> PutVendor([FromBody] Vendor vendor)
-        {
-            return Ok(); 
-        }
-
         [HttpDelete(Name = "DeleteVendor")]
         public async Task<IActionResult> DeleteVendors([FromBody] string[] vendorIds)
         {
