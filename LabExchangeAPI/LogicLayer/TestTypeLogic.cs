@@ -1,7 +1,7 @@
 ﻿using LabExchangeAPI.LabExchangeDatabase;
 using LabExchangeAPI.LogicLayer.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using EFCore.BulkExtensions;
 
 namespace LabExchangeAPI.LogicLayer
 {
@@ -16,8 +16,6 @@ namespace LabExchangeAPI.LogicLayer
         public async Task<List<TestType>> GetTestTypesAsync()
         {
             List<TestType> testTypes = new List<TestType>();
-            //using (LabExchangeDatabaseContext dbContext = new LabExchangeDatabaseContext())
-            //{
                 var dbTestTypes = await _context.TblTestTypes.ToListAsync();
 
                 if (dbTestTypes.Count > 0)
@@ -38,7 +36,17 @@ namespace LabExchangeAPI.LogicLayer
                     return testTypes;
                 }
                     return Array.Empty<TestType>().ToList();
-           // }
+        }
+
+        public async Task PostTestTypesAsync(List<TestType> testTypes)
+        {
+            await _context.BulkInsertOrUpdateAsync(testTypes);
+        }
+
+        public async Task DeleteTestTypesAsync(List<int> testTypeIds)
+        {
+            var testTypesToDelete = await _context.TblTestTypes.Where(t => testTypeIds.Any(id => id == t.TestTypeId)).ToListAsync();
+            await _context.BulkDeleteAsync(testTypesToDelete); 
         }
     }
 }

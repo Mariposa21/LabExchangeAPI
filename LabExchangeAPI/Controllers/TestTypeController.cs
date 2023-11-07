@@ -12,12 +12,12 @@ namespace LabExchangeAPI.Controllers
     {
 
         private readonly ILogger<TestTypeController> _logger;
-        private LabExchangeDatabaseContext _context;
+        private TestTypeLogic _logicLayer;
 
-        public TestTypeController(ILogger<TestTypeController> logger, LabExchangeDatabaseContext context)
+        public TestTypeController(ILogger<TestTypeController> logger, TestTypeLogic logicLayer, LabExchangeDatabaseContext dbContext)
         {
             _logger = logger;
-            _context = context;
+            _logicLayer = new TestTypeLogic(dbContext);
         }
 
 
@@ -30,47 +30,22 @@ namespace LabExchangeAPI.Controllers
         [HttpGet("~/TestTypes")]
         public async Task<List<TestType>> GetTestTypes()
         {
-            List<TestType> TestTypeArray = new List<TestType>();
-            //TestType testTypeMock1 = new TestType()
-            //{
-            //    TestTypeId = 1, 
-            //    AbnormalValuesCritical = true,
-            //    TestTypeName = "Pregnancy",
-            //    IsValidTestType = true,
-            //    TestTypeCategory = TestTypeCategory.Urine, 
-            //    TestTypeNormalValues = "Negative"
-            //};
-            //TestType testTypeMock2 = new TestType()
-            //{
-            //    TestTypeId = 2,
-            //    AbnormalValuesCritical = false,
-            //    TestTypeName = "Strep",
-            //    IsValidTestType = true,
-            //    TestTypeCategory = TestTypeCategory.Swab,
-            //    TestTypeNormalValues = "Negative"
-            //};
-
-            //TestTypeArray.Add(testTypeMock1);
-            //TestTypeArray.Add(@testTypeMock2);
-            TestTypeLogic testTypeLogic = new TestTypeLogic(_context); 
-            TestTypeArray = await testTypeLogic.GetTestTypesAsync(); 
+            List<TestType> TestTypeArray = await _logicLayer.GetTestTypesAsync(); 
             return TestTypeArray; 
         }
 
         [HttpPost(Name = "PostTestTypes")]
         public async Task<IActionResult> PostTestTypes([FromBody] List<TestType> testTypes)
         {
+            await _logicLayer.PostTestTypesAsync(testTypes); 
             return Ok(); 
         }
 
         [HttpDelete(Name = "DeleteTestTypes")]
-        public async Task<IActionResult> DeleteTestTypes(string[] testTypeIds)
+        public async Task<IActionResult> DeleteTestTypes(List<int> testTypeIds)
         {
-            foreach(string TestTypeId in testTypeIds)
-            {
-                Console.WriteLine("Deleting " +  TestTypeId.ToString());
-            }
-            return NoContent();  
+            await _logicLayer.DeleteTestTypesAsync(testTypeIds);
+            return Ok();  
         }
     }
 }
