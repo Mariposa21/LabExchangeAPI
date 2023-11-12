@@ -1,71 +1,46 @@
+using LabExchangeAPI.LabExchangeDatabase;
+using LabExchangeAPI.LogicLayer;
 using LabExchangeAPI.LogicLayer.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LabExchangeAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("Vendors")]
     public class VendorController : ControllerBase
     {
-        private static readonly string[] Tests = new[]
-        {
-        "RxExpress", "LabTestRS", "FamilyTest"
-    };
 
         private readonly ILogger<VendorController> _logger;
+        private VendorLogic _logicLayer;
 
-        public VendorController(ILogger<VendorController> logger)
+
+        public VendorController(ILogger<VendorController> logger,
+            LabExchangeDatabaseContext dbContext)
         {
             _logger = logger;
+            _logicLayer = new VendorLogic(dbContext);
         }
 
+
         [HttpGet(Name = "GetVendors")]
-        public IEnumerable<Vendor> GetVendors()
+        public async Task<List<Vendor>> GetVendors()
         {
-            List<Vendor> VendorArray = new List<Vendor>();
-            Vendor vendorMock1 = new Vendor()
-            {
-                VendorId = 1, 
-                VendorName = "DiagnosticsLab", 
-                VendorStreetAddress1 = "123 Blueberry Lane", 
-                VendorStreetAddress2 = null, 
-                VendorCity = "Boston", 
-                VendorState = "MA", 
-                VendorZipCode = "00000", 
-                VendorPhone = "888-888-8888", 
-                VendorExtension = null
-            };
-            Vendor vendorMock2 = new Vendor()
-            {
-                VendorId = 1,
-                VendorName = "BloodLabsNewEngland",
-                VendorStreetAddress1 = "123 Strawberry Circle",
-                VendorStreetAddress2 = null,
-                VendorCity = "Boston",
-                VendorState = "MA",
-                VendorZipCode = "00000",
-                VendorPhone = "888-888-8888",
-                VendorExtension = "1234"
-            };
-            VendorArray.Add(vendorMock1);
-            VendorArray.Add(vendorMock2);
-            return VendorArray;
+            List<Vendor> vendorArray = await _logicLayer.GetVendorsAsync();
+            return vendorArray;
         }
 
         [HttpPost(Name = "PostVendor")]
         public async Task<IActionResult> PostVendors([FromBody] List<Vendor> vendors)
         {
-            return Ok(); 
+            await _logicLayer.PostVendorsAsync(vendors);
+            return Ok();
         }
 
         [HttpDelete(Name = "DeleteVendor")]
-        public async Task<IActionResult> DeleteVendors([FromBody] string[] vendorIds)
+        public async Task<IActionResult> DeleteVendors([FromBody] List<int> vendorIds)
         {
-            foreach (string VendorId in vendorIds)
-            {
-                Console.WriteLine("Deleting " + VendorId.ToString());
-            }
-            return NoContent();
+            await _logicLayer.DeleteTestTypesAsync(vendorIds);
+            return Ok();
         }
     }
 }

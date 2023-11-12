@@ -7,27 +7,28 @@ using System.Net;
 namespace LabExchangeAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("TestTypes")]
     public class TestTypeController : ControllerBase
     {
 
         private readonly ILogger<TestTypeController> _logger;
         private TestTypeLogic _logicLayer;
 
-        public TestTypeController(ILogger<TestTypeController> logger, TestTypeLogic logicLayer, LabExchangeDatabaseContext dbContext)
+        public TestTypeController(ILogger<TestTypeController> logger, 
+            LabExchangeDatabaseContext dbContext)
         {
             _logger = logger;
             _logicLayer = new TestTypeLogic(dbContext);
         }
 
 
-        [HttpGet("~/TestTypeCategories")]
+        [HttpGet("~/TestTypeCategories", Name = "GetTestTypeCategories")]
         public IEnumerable<string> GetTestTypeCategories()
         {
             return Enum.GetNames(typeof(TestTypeCategory)); 
         }
 
-        [HttpGet("~/TestTypes")]
+        [HttpGet(Name = "GetTestTypes")]
         public async Task<List<TestType>> GetTestTypes()
         {
             List<TestType> TestTypeArray = await _logicLayer.GetTestTypesAsync(); 

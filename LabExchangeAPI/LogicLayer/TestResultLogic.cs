@@ -53,7 +53,42 @@ namespace LabExchangeAPI.LogicLayer
             return Array.Empty<TestResult>().ToList();
         }
 
-        public async Task PostTestTypesAsync(List<TestResult> testResults)
+        public async Task<TestResult> GetTestResultAsync(int testResultId)
+        {
+            TestResult testResult = new TestResult(); 
+            var dbTestResult = await _context.TblTestResults.FirstOrDefaultAsync(x => x.TestResultId == testResultId);
+
+            if (dbTestResult != null)
+            {
+                    testResult = (new TestResult()
+                    {
+                        Id = (int)dbTestResult.TestResultId,
+                        VendorId = dbTestResult.VendorId,
+                        VendorResultId = dbTestResult.VendorResultId,
+                        PatientMedicalRecordNum = dbTestResult.PatientMedicalRecordNum,
+                        ResultGenerationDateTime = dbTestResult.ResultGenerationDateTime,
+                        PatientDateOfBirth = DateOnly.FromDateTime(dbTestResult.PatientDateOfBirth),
+                        SubmissionDateTime = dbTestResult.SubmissionDateTime,
+                        IsValidTestResult = (bool)dbTestResult.IsValidTestResult,
+                        FlagForReview = (bool)dbTestResult.FlagForReview,
+                        ResultTestType = new TestType()
+                        {
+                            TestTypeNormalValues = dbTestResult.ResultTestType.TestTypeNormalValues,
+                            TestTypeCategory = (TestTypeCategory)Enum.ToObject(typeof(TestTypeCategory), dbTestResult.ResultTestType.TestTypeCategoryId),
+                            AbnormalValuesCritical = dbTestResult.ResultTestType.IsAbnormalValuesCritical,
+                            IsValidTestType = dbTestResult.ResultTestType.IsValidTestType,
+                            TestTypeId = dbTestResult.ResultTestType.TestTypeId,
+                            TestTypeName = dbTestResult.ResultTestType.TestTypeName
+                        },
+                        TestResultShort = dbTestResult.TestResultShortDescription,
+                        TestResultNotes = dbTestResult.TestResultNotes
+                    }
+                    );
+                }
+                return testResult;
+        }
+
+        public async Task PostTestResultsAsync(List<TestResult> testResults)
         {
             List<TblTestResult> dbTestResults = new List<TblTestResult>();
             foreach (TestResult testResult in testResults)
@@ -122,7 +157,7 @@ namespace LabExchangeAPI.LogicLayer
             await _context.BulkInsertOrUpdateAsync(dbTestResults);
         }
 
-        public async Task DeleteTestTypesAsync(List<int> testTypeIds)
+        public async Task DeleteTestResultsAsync(List<int> testTypeIds)
         {
             var testTypesToDelete = await _context.TblTestTypes.Where(t => testTypeIds.Any(id => id == t.TestTypeId)).ToListAsync();
             await _context.BulkDeleteAsync(testTypesToDelete);
