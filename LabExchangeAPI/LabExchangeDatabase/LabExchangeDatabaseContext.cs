@@ -77,17 +77,7 @@ public partial class LabExchangeDatabaseContext : DbContext
             entity.HasKey(e => e.TestTypeId).HasName("PK__tblTestT__9BB876A6EADA596E");
 
             entity
-                .ToTable("tblTestType")
-                .ToTable(tb => tb.IsTemporal(ttb =>
-                    {
-                        ttb.UseHistoryTable("MSSQL_TemporalHistoryFor_1237579447", "dbo");
-                        ttb
-                            .HasPeriodStart("RecordValidFrom")
-                            .HasColumnName("RecordValidFrom");
-                        ttb
-                            .HasPeriodEnd("RecordValidTo")
-                            .HasColumnName("RecordValidTo");
-                    }));
+                .ToTable("tblTestType"); 
 
             entity.Property(e => e.TestTypeName)
                 .HasMaxLength(100)

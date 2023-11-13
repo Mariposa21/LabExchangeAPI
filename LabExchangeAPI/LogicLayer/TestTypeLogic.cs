@@ -40,7 +40,24 @@ namespace LabExchangeAPI.LogicLayer
 
         public async Task PostTestTypesAsync(List<TestType> testTypes)
         {
-            await _context.BulkInsertOrUpdateAsync(testTypes);
+            List<TblTestType> testTypesEntities = new List<TblTestType>();
+            foreach (TestType testType in testTypes)
+            {
+                testTypesEntities.Add(new TblTestType()
+                {
+                    TestTypeId = testType.TestTypeId,
+                    TestTypeCategoryId = (byte)testType.TestTypeCategory, 
+                    TestTypeName = testType.TestTypeName,
+                    TestTypeNormalValues = testType.TestTypeNormalValues,
+                    ApiUserId = 123, 
+                    IsValidTestType = testType.IsValidTestType,
+                    IsAbnormalValuesCritical = testType.AbnormalValuesCritical
+                });
+            }
+            if (testTypesEntities.Count > 0)
+            {
+                await _context.BulkInsertOrUpdateAsync(testTypesEntities);
+            }
         }
 
         public async Task DeleteTestTypesAsync(List<int> testTypeIds)
