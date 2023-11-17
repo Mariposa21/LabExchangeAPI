@@ -31,17 +31,7 @@ public partial class LabExchangeDatabaseContext : DbContext
             entity.HasKey(e => e.TestResultId).HasName("PK__tblTestR__E246358720548DCC");
 
             entity
-                .ToTable("tblTestResult")
-                .ToTable(tb => tb.IsTemporal(ttb =>
-                    {
-                        ttb.UseHistoryTable("MSSQL_TemporalHistoryFor_1381579960", "dbo");
-                        ttb
-                            .HasPeriodStart("RecordValidFrom")
-                            .HasColumnName("RecordValidFrom");
-                        ttb
-                            .HasPeriodEnd("RecordValidTo")
-                            .HasColumnName("RecordValidTo");
-                    }));
+                .ToTable("tblTestResult"); 
 
             entity.Property(e => e.FlagForReview).HasDefaultValueSql("((0))");
             entity.Property(e => e.IsValidTestResult).HasDefaultValueSql("((0))");
@@ -106,20 +96,10 @@ public partial class LabExchangeDatabaseContext : DbContext
 
         modelBuilder.Entity<TblVendor>(entity =>
         {
-            entity.HasKey(e => e.VendorId).HasName("PK__tblVendo__FC8618F37F491D34");
+            entity.HasKey(e => e.VendorId);
 
             entity
-                .ToTable("tblVendor")
-                .ToTable(tb => tb.IsTemporal(ttb =>
-                    {
-                        ttb.UseHistoryTable("MSSQL_TemporalHistoryFor_1333579789", "dbo");
-                        ttb
-                            .HasPeriodStart("RecordValidFrom")
-                            .HasColumnName("RecordValidFrom");
-                        ttb
-                            .HasPeriodEnd("RecordValidTo")
-                            .HasColumnName("RecordValidTo");
-                    }));
+                .ToTable("tblVendor"); 
 
             entity.Property(e => e.VendorCity)
                 .HasMaxLength(100)
