@@ -3,6 +3,8 @@ using LabExchangeAPI.LogicLayer.Models;
 using Microsoft.EntityFrameworkCore;
 using EFCore.BulkExtensions;
 using System.Globalization;
+using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace LabExchangeAPI.LogicLayer
 {
@@ -56,7 +58,7 @@ namespace LabExchangeAPI.LogicLayer
         public async Task<TestResult> GetTestResultAsync(int testResultId)
         {
             TestResult testResult = new TestResult(); 
-            var dbTestResult = await _context.TblTestResults.FirstOrDefaultAsync(x => x.TestResultId == testResultId);
+            var dbTestResult = await _context.TblTestResults.Include(x => x.ResultTestType).FirstOrDefaultAsync(x => x.TestResultId == testResultId);
 
             if (dbTestResult != null)
             {
@@ -84,8 +86,13 @@ namespace LabExchangeAPI.LogicLayer
                         TestResultNotes = dbTestResult.TestResultNotes
                     }
                     );
-                }
                 return testResult;
+            }
+            else
+            {
+                throw new Exception("Record not found."); 
+            }
+
         }
 
         public async Task PostTestResultsAsync(List<TestResult> testResults)
@@ -134,19 +141,7 @@ namespace LabExchangeAPI.LogicLayer
                         SubmissionDateTime = testResult.SubmissionDateTime,
                         IsValidTestResult = (bool)testResult.IsValidTestResult,
                         FlagForReview = (bool)testResult.FlagForReview,
-                        ResultTestType = new TblTestType()
-                        {
-                            TestTypeNormalValues = testResult.ResultTestType.TestTypeNormalValues,
-                            TestTypeCategory = new TblTestTypeCategory()
-                            {
-                                TestTypeCategoryId = (byte)(TestTypeCategory)Enum.ToObject(typeof(TestTypeCategory), testResult.ResultTestType.TestTypeCategory),
-                                TestTypeCategory = testResult.ResultTestType.TestTypeCategory.ToString()
-                            },
-                            IsAbnormalValuesCritical = testResult.ResultTestType.AbnormalValuesCritical,
-                            IsValidTestType = testResult.ResultTestType.IsValidTestType,
-                            TestTypeId = testResult.ResultTestType.TestTypeId,
-                            TestTypeName = testResult.ResultTestType.TestTypeName
-                        },
+                        ResultTestTypeId = testResult.ResultTestType.TestTypeId,
                         TestResultShortDescription = testResult.TestResultShort,
                         TestResultNotes = testResult.TestResultNotes
                     }); 
@@ -157,9 +152,9 @@ namespace LabExchangeAPI.LogicLayer
             await _context.BulkInsertOrUpdateAsync(dbTestResults);
         }
 
-        public async Task DeleteTestResultsAsync(List<int> testTypeIds)
+        public async Task DeleteTestResultsAsync(List<int> testResultIds)
         {
-            var testTypesToDelete = await _context.TblTestTypes.Where(t => testTypeIds.Any(id => id == t.TestTypeId)).ToListAsync();
+            var testTypesToDelete = await _context.TblTestResults.Where(t => testResultIds.Any(id => id == (int)t.TestResultId)).ToListAsync();
             await _context.BulkDeleteAsync(testTypesToDelete);
         }
     }

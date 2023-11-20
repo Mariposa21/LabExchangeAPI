@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace LabExchangeAPI.Controllers
 {
     [ApiController]
-    [Route("TestResults")]
+    [Route("TestResult")]
     public class TestResultController : ControllerBase
     {
         private readonly ILogger<TestResultController> _logger;
@@ -20,7 +20,7 @@ namespace LabExchangeAPI.Controllers
             _logicLayer = new TestResultLogic(dbContext);
         }
 
-        [HttpGet("~/{TestResultId}", Name = "GetTestResult")]
+        [HttpGet("{TestResultId}", Name = "GetTestResult")]
         public async Task<TestResult> GetTestResult([FromRoute] int TestResultId)
         {
             TestResult testResult = await _logicLayer.GetTestResultAsync(TestResultId);
